@@ -17,7 +17,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/book")
 public class BookController {
-	/*Test2*/
+	/*Test3*/
 	@Autowired() 
 	BookService bookService;
 	
