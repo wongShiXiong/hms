@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>顾客管理</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <link rel="stylesheet" type="text/css" href="../css/wui.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/font/iconfont.woff">
+    <link rel="stylesheet" type="text/css" href="../css/font/iconfont.ttf">
+    <link rel="stylesheet" type="text/css" href="../css/font/iconfont.eot">
+    
+	<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
+    
+    
+    <script type="text/javascript" src="../js/jquery.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/wui-date.js" charset="utf-8"></script>
+     
+    <!-- 分页组件开始 -->
+		<script src="../plugins/angularjs/pagination.js"></script>
+		<link rel="stylesheet" href="../plugins/angularjs/pagination.css">
+	<!-- 分页组件结束 -->
+	
+ 
+ 	<script type="text/javascript">
+ 		var app=angular.module('hms',['pagination','wui.date']);
+ 		app.controller('bookController',function($scope,$http){
+ 			
+ 			//查询所有顾客信息
+ 			$scope.findAll=function(){
+ 				$http.get('../book/findAll.do').success(
+ 					function(response){
+ 							$scope.list=response;
+ 					}
+ 				);
+ 			}
+ 			
+  			//新增
+			$scope.save=function(){
+				var methodName='add';//方法名 
+				if($scope.entity.aId!=null){
+					methodName='update';
+				}				
+				$http.post('../book/'+methodName +'.do',$scope.entity).success(
+					function(response){
+						if(response.success){
+							alert(response.message);
+							$scope.reloadList();//刷新
+						}else{
+							alert(response.message);
+						}				
+					}		
+				);
+			}
+ 			
+  			$scope.updateTwo=function(rt_id,c_id,a_id){
+ 				$http.get('../book/updateTwo.do?rt_id='+rt_id+'&c_id='+c_id+'&a_id='+a_id).success(
+ 						function(response){
+ 							if(response.success){
+ 								alert(response.message);
+ 								$scope.reloadList();//刷新
+ 							}else{
+ 								alert(response.message);
+ 							}				
+ 						}	
+ 				);
+ 			} 
+  			
+  			
+  			
+ 			$scope.findOne=function(id){
+ 				$http.get('../book/findOne.do?id='+id).success(
+ 						function(response){
+ 							$scope.entity=response;
+ 						}
+ 				);
+ 			}
+ 			
+ 			//刷新列表
+ 			$scope.reloadList=function(){
+ 				 $scope.search($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
+ 			}
+ 			$scope.paginationConf = {
+ 					 currentPage: 1,
+ 					 totalItems: 10,
+ 					 itemsPerPage: 10,
+ 					 perPageOptions: [10, 20, 30, 40, 50],
+ 					 onChange: function(){
+ 					     	$scope.reloadList();//重新加载
+ 					 }
+ 			}; 
+ 			$scope.findPage=function(page,size){
+				$http.get('../book/findPage.do?page='+page+'&size='+size).success(
+						function(response){
+							$scope.list=response.rows;//显示当前页数据
+							$scope.paginationConf.totalItems=response.total//更新总记录数
+						}
+						
+				)
+				
+			}; 
+			
+			 $scope.selectIds=[];//用户勾选的id
+			$scope.updateSelection=function($event,id){
+				if($event.target.checked){
+					$scope.selectIds.push(id);
+				}else{
+					var index=$scope.selectIds.indexOf(id);//查找元素的位置
+					$scope.selectIds.splice(index,1);//删除指定的页数，然后删除一条记录
+				}
+			};
+			//删除
+			$scope.dele=function(){
+ 				$http.get('../book/delete.do?ids='+$scope.selectIds).success(
+ 						function(response){
+ 							if(response.success){
+ 								$scope.reloadList();//刷新
+ 							}else{
+ 								alert(response.message);
+ 							}
+ 						}
+ 						
+ 				);
+ 			}; 
+			$scope.searchEntity={};
+			//地址上有参数了需要在function里加入参数定义且传参
+			$scope.search=function(page,size){
+				$http.post('../book/search.do?page='+page+'&size='+size,$scope.searchEntity).success(
+						function(response){
+							$scope.list=response.rows;//显示当前页数据
+							$scope.paginationConf.totalItems=response.total//更新总记录数
+						}
+						
+				)
+			};
+			//查询所有顾客信息
+ 			$scope.findAllBystate=function(){
+ 				$http.get('../book/findAllBystate.do').success(
+ 					function(response){
+ 							$scope.listone=response;
+ 							
+ 					}
+ 				);
+ 			}
+			 
+ 			
+ 			
+ 			
+ 		});
+ 			
+ 			
+
+ 	
+ 	</script>
+</head>
+																					<!--ng-init="findAll()"  -->
+<body class="hold-transition skin-red sidebar-mini" ng-app="hms" ng-controller="bookController" >
+  <!-- .box-body -->
+                
+                    <div class="box-header with-border">
+                        <h3 class="box-title">顾客管理</h3>
+                    </div>
+
+                    <div class="box-body">
+
+                        <!-- 数据表格 -->
+                        <div class="table-box">
+
+                            <!--工具栏-->
+                            <div class="pull-left">
+                                <div class="form-group form-inline">
+                                    <div class="btn-group">
+                                       <button type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal" ng-click="entity={}"><i class="fa fa-file-o"></i> 新建</button>
+                                        <button type="button" class="btn btn-default" title="删除" ng-click="dele()" ><i class="fa fa-trash-o"></i> 删除</button>
+                                        <!-- <button type="button" class="btn btn-default" title="提交审核" ><i class="fa fa-check"></i> 提交审核</button>
+                                        <button type="button" class="btn btn-default" title="屏蔽" onclick='confirm("你确认要屏蔽吗？")'><i class="fa fa-ban"></i> 屏蔽</button> -->
+                                        <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-tools pull-right">
+                                <div class="has-feedback">
+							             客房号：<input ng-model="searchEntity.aRoomid">								
+							             顾客姓名：<input ng-model="searchEntity.aCustomername"> 
+							             结算类型：<input ng-model="searchEntity.aValuestate">	
+							             结算状态：<input ng-model="searchEntity.aRetirement">								
+									<button class="btn btn-default" ng-click="reloadList()">查询</button>                                    
+                                </div>
+                            </div>
+                            <!--工具栏/-->
+
+			                  <!--数据列表-->
+			                  <table id="dataList" class="table table-bordered table-striped table-hover dataTable">
+			                      <thead>
+			                          <tr>
+			                              <th class="" style="padding-right:0px">
+			                                  <input id="selall" type="checkbox" class="icheckbox_square-blue">
+			                              </th> 
+										  <th class="sorting_asc">ID</th>
+									      <th class="sorting">客房号</th>
+									      <th class="sorting">住宿时间</th>
+									      <th class="sorting">住宿天数</th>
+									      <th class="sorting">退宿时间</th>
+									      <th class="sorting">顾客姓名</th>
+									      <th class="sorting">客户类型</th>									     						
+					                      <th class="text-center">总计金额</th>
+					                      <th class="sorting">实际金额</th>	
+					                     <!--  <th class="sorting">优惠金额</th>	 -->
+					                      <th class="sorting">结算类型</th>
+					          <!--             <th class="sorting">结算状态</th> -->
+					                      <th class="sorting">是否退宿</th>		
+			                          </tr>
+			                      </thead>
+			                      <tbody>
+			                          <tr ng-repeat="entity in list">
+			                              <td><input  type="checkbox" ng-click="updateSelection($event,entity.aId)"></td>			                              
+				                          <td>{{entity.aId}}</td>
+									      <td>{{entity.aRoomid}}</td>
+									      <td>{{entity.aBooktime}}</td>
+									      <td>{{entity.aBookdays}}</td>
+									      <td>{{entity.aEndtime}}</td>
+									      <td>{{entity.aCustomername}}</td>
+									      <td>{{entity.aType}}</td>
+									      <td>{{entity.aActualvalue}}</td>
+									      <td>{{entity.aShouquvalue}}</td>
+									     <!--  <td>{{entity.aDiscoutvalue}}</td> -->
+									      <td>{{entity.aValuestate}}</td>
+									   <!--    <td>{{entity.aState}}</td> -->
+									      <td>{{entity.aRetirement}}</td>
+		               <!--                    <td>
+		                                  	<span>
+		                                  		未申请
+		                                  	</span>
+		                                  	<span >
+		                                  		申请中
+		                                  	</span>
+		                                  	<span>
+		                                  		审核通过
+		                                  	</span>
+		                                  	<span>
+		                                  		已驳回
+		                                  	</span>
+		                                  </td>	 -->	                                  
+		                                  <td class="text-center"> 										<!-- ng-click="updateTwo()" -->
+		                                	  <button type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal1" ng-click="findOne(entity.aId)">退宿</button>                                         
+		                                 	  <button type="button" class="btn bg-olive btn-xs" title="修改" data-toggle="modal" data-target="#editModal" ng-click="findOne(entity.aId)"><i class="fa fa-file-o" ></i> 修改</button>
+		                                 	  <!-- <button type="button" class="btn bg-olive btn-xs">删除</button> -->                   
+		                                  </td>
+			                          </tr>
+			                      </tbody>
+			                  </table>
+			                  <!--数据列表/-->                        
+						<tm-pagination conf="paginationConf"></tm-pagination>
+                        </div>
+                        <!-- 数据表格 /-->
+                        
+                        
+                     </div>
+                    <!-- /.box-body -->
+                    
+                    
+<!-- 编辑窗口 -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" >
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">住宿信息编辑</h3>
+		</div>
+		<div class="modal-body">		
+			<table class="table table-bordered table-striped"  width="800px">
+		      	<tr>
+		      		<td>客房号</td>
+		      		<td><input  class="form-control" placeholder="客房号" ng-model="entity.aRoomid">  </td>
+		      		<td><button class="btn btn-success" data-target="#editModal2" data-toggle="modal" ng-click="findAllBystate()" >查询空闲房间</button></td>
+		      	</tr>		      	
+		      	<tr>
+		      		<td>住宿时间</td>
+		      		<!-- <td><input  class="form-control" placeholder="住宿时间" ng-model="entity.aBooktime">  </td> -->
+		      		<td><wui-date 
+							format="yyyy-mm-dd hh:mm:ss" 
+							placeholder="请选择或输入日期" 
+							id="date4" 
+							btns="{'ok':'确定','now':'此刻'}" 
+							ng-model="entity.aBooktime"
+							>
+							</wui-date>
+					</td>
+		      	</tr>
+		      	<tr>
+		      		<td>住宿天数</td>
+		      		<td><input  class="form-control" placeholder="住宿天数" ng-model="entity.aBookdays">  </td>
+		      	</tr>
+		      	<tr>
+		      		<td>退宿时间</td>
+		      		<!-- <td><input  class="form-control" placeholder="退宿时间" ng-model="entity.aEndtime">  </td> -->
+		      		<td><wui-date 
+							format="yyyy-mm-dd hh:mm:ss" 
+							placeholder="请选择或输入日期" 
+							id="date4" 
+							btns="{'ok':'确定','now':'此刻'}" 
+							ng-model="entity.aEndtime"
+							>
+							</wui-date>
+					</td>
+		      	</tr>
+		      	<tr>
+		      		<td>顾客ID</td>
+		      		<td><input  class="form-control" placeholder="顾客ID" ng-model="entity.aCustomerid">  </td>
+		      		<!-- <td><button class="btn btn-success">查询顾客ID</button></td> -->
+		      	</tr>
+		      	<tr>
+		      		<td>顾客姓名</td>
+		      		<td><input  class="form-control" placeholder="顾客姓名" ng-model="entity.aCustomername">  </td>
+		      	</tr>
+		      	<tr>
+		      		<td>客户类型</td>
+		      		<td><input  class="form-control" placeholder="客户类型" ng-model="entity.aType">  </td>
+		      	</tr>
+		   <!--    	<tr>
+		      		<td>总计金额</td>
+		      		<td><input  class="form-control" placeholder="总计金额" ng-model="entity.aActualvalue">  </td>
+		      	</tr>
+		      	<tr>
+		      		<td>实际金额</td>
+		      		<td><input  class="form-control" placeholder="实际金额" ng-model="entity.aShouquvalue">  </td>
+		      	</tr> -->
+		  <!--     	<tr>
+		      		<td>优惠金额</td>
+		      		<td><input  class="form-control" placeholder="优惠金额" ng-model="entity.aDiscoutvalue">  </td>
+		      	</tr> -->
+		      	<tr>
+		      		<td>结算类型</td>
+		      		<td><input  class="form-control" placeholder="结算类型" ng-model="entity.aValuestate">  </td>
+		      	</tr>
+<!-- 		      	<tr>
+		      		<td>结算状态</td>
+		      		<td><input  class="form-control" placeholder="结算状态" ng-model="entity.aState">  </td>
+		      	</tr> -->
+		      	  	<tr>
+		      		<td>是否退宿</td>
+		      		<td><input class="form-control" placeholder="是否退宿" ng-model="entity.aRetirement">  </td>
+		      	</tr>
+		      	      	
+			 </table>				
+		</div>
+		<div class="modal-footer">						
+			<button class="btn btn-success" data-dismiss="modal" aria-hidden="true" ng-click="save()">保存</button>
+			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+		</div>
+	  </div>
+	</div>
+</div>
+
+<!-- 编辑窗口 -->
+<div class="modal fade" id="editModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" >
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">退宿清单</h3>
+		</div>
+		<div class="modal-body">		
+			<table class="table table-bordered table-striped"  width="800px">
+		      	<tr>
+		      		<td>退宿人客房号</td>
+		      		<td><input  class="form-control" placeholder="品牌名称" ng-model="entity.aRoomid">  </td>
+		      	</tr>		      	
+		      	<tr>
+		      		<td>退宿人编号</td>
+		      		<td><input  class="form-control" placeholder="退宿人编号" ng-model="entity.aCustomerid">  </td>
+		      	</tr>
+		      	<tr>
+		      		<td>退宿人ID</td>
+		      		<td><input  class="form-control" placeholder="退宿ID" ng-model="entity.aId">  </td>
+		      	</tr>
+		      			      	
+			 </table>				
+		</div>
+		<div class="modal-footer">						
+			<button class="btn btn-success" data-dismiss="modal" aria-hidden="true" ng-click="updateTwo(entity.aRoomid,entity.aCustomerid,entity.aId)">保存</button>
+			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+		</div>
+	  </div>
+	</div>
+</div>
+
+
+
+<!-- 编辑窗口 -->
+<div class="modal fade" id="editModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" >
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">空房清单</h3>
+		</div>
+		<div class="modal-body">		
+			<table class="table table-bordered table-striped"  width="800px">
+		      	<tr>
+		      		<td>客房号</td>
+		      		<td>客房类型</td>
+		      		<td>客房价格</td>
+		      		<td>房间状态</td>
+		      	</tr>
+		      	<tr ng-repeat="entity in listone">
+		      		<td>{{entity.rtId}}</td>
+		      		<td>{{entity.rtName}}</td>
+		      		<td>{{entity.rtPrice}}</td>
+		      		<td>{{entity.rtState}}</td>
+		      	</tr>
+			 </table>				
+		</div>
+		<div class="modal-footer">						
+			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+		</div>
+	  </div>
+	</div>
+</div>
+
+		
+</body>
+
+</html>

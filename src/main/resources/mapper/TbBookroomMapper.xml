@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hms.dao.TbBookroomMapper" >
+  <resultMap id="BaseResultMap" type="com.hms.pojo.TbBookroom" >
+    <id column="a_id" property="aId" jdbcType="INTEGER" />
+    <result column="a_roomid" property="aRoomid" jdbcType="INTEGER" />
+    <result column="a_booktime" property="aBooktime" jdbcType="TIMESTAMP" />
+    <result column="a_bookdays" property="aBookdays" jdbcType="INTEGER" />
+    <result column="a_endtime" property="aEndtime" jdbcType="TIMESTAMP" />
+    <result column="a_customerid" property="aCustomerid" jdbcType="INTEGER" />
+    <result column="a_customername" property="aCustomername" jdbcType="VARCHAR" />
+    <result column="a_type" property="aType" jdbcType="VARCHAR" />
+    <result column="a_actualvalue" property="aActualvalue" jdbcType="VARCHAR" />
+    <result column="a_shouquvalue" property="aShouquvalue" jdbcType="VARCHAR" />
+    <result column="a_discoutvalue" property="aDiscoutvalue" jdbcType="VARCHAR" />
+    <result column="a_valuestate" property="aValuestate" jdbcType="VARCHAR" />
+    <result column="a_state" property="aState" jdbcType="VARCHAR" />
+    <result column="a_retirement" property="aRetirement" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    a_id, a_roomid, a_booktime, a_bookdays, a_endtime, a_customerid, a_customername, 
+    a_type, a_actualvalue, a_shouquvalue, a_discoutvalue, a_valuestate, a_state, a_retirement
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hms.pojo.TbBookroomExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_bookroom
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_bookroom
+    where a_id = #{aId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_bookroom
+    where a_id = #{aId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hms.pojo.TbBookroomExample" >
+    delete from tb_bookroom
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hms.pojo.TbBookroom" >
+    insert into tb_bookroom (a_id, a_roomid, a_booktime, 
+      a_bookdays, a_endtime, a_customerid, 
+      a_customername, a_type, a_actualvalue, 
+      a_shouquvalue, a_discoutvalue, a_valuestate, 
+      a_state, a_retirement)
+    values (#{aId,jdbcType=INTEGER}, #{aRoomid,jdbcType=INTEGER}, #{aBooktime,jdbcType=TIMESTAMP}, 
+      #{aBookdays,jdbcType=INTEGER}, #{aEndtime,jdbcType=TIMESTAMP}, #{aCustomerid,jdbcType=INTEGER}, 
+      #{aCustomername,jdbcType=VARCHAR}, #{aType,jdbcType=VARCHAR}, #{aActualvalue,jdbcType=VARCHAR}, 
+      #{aShouquvalue,jdbcType=VARCHAR}, #{aDiscoutvalue,jdbcType=VARCHAR}, #{aValuestate,jdbcType=VARCHAR}, 
+      #{aState,jdbcType=VARCHAR}, #{aRetirement,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hms.pojo.TbBookroom" >
+    insert into tb_bookroom
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="aId != null" >
+        a_id,
+      </if>
+      <if test="aRoomid != null" >
+        a_roomid,
+      </if>
+      <if test="aBooktime != null" >
+        a_booktime,
+      </if>
+      <if test="aBookdays != null" >
+        a_bookdays,
+      </if>
+      <if test="aEndtime != null" >
+        a_endtime,
+      </if>
+      <if test="aCustomerid != null" >
+        a_customerid,
+      </if>
+      <if test="aCustomername != null" >
+        a_customername,
+      </if>
+      <if test="aType != null" >
+        a_type,
+      </if>
+      <if test="aActualvalue != null" >
+        a_actualvalue,
+      </if>
+      <if test="aShouquvalue != null" >
+        a_shouquvalue,
+      </if>
+      <if test="aDiscoutvalue != null" >
+        a_discoutvalue,
+      </if>
+      <if test="aValuestate != null" >
+        a_valuestate,
+      </if>
+      <if test="aState != null" >
+        a_state,
+      </if>
+      <if test="aRetirement != null" >
+        a_retirement,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="aId != null" >
+        #{aId,jdbcType=INTEGER},
+      </if>
+      <if test="aRoomid != null" >
+        #{aRoomid,jdbcType=INTEGER},
+      </if>
+      <if test="aBooktime != null" >
+        #{aBooktime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="aBookdays != null" >
+        #{aBookdays,jdbcType=INTEGER},
+      </if>
+      <if test="aEndtime != null" >
+        #{aEndtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="aCustomerid != null" >
+        #{aCustomerid,jdbcType=INTEGER},
+      </if>
+      <if test="aCustomername != null" >
+        #{aCustomername,jdbcType=VARCHAR},
+      </if>
+      <if test="aType != null" >
+        #{aType,jdbcType=VARCHAR},
+      </if>
+      <if test="aActualvalue != null" >
+        #{aActualvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="aShouquvalue != null" >
+        #{aShouquvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="aDiscoutvalue != null" >
+        #{aDiscoutvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="aValuestate != null" >
+        #{aValuestate,jdbcType=VARCHAR},
+      </if>
+      <if test="aState != null" >
+        #{aState,jdbcType=VARCHAR},
+      </if>
+      <if test="aRetirement != null" >
+        #{aRetirement,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hms.pojo.TbBookroomExample" resultType="java.lang.Integer" >
+    select count(*) from tb_bookroom
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update tb_bookroom
+    <set >
+      <if test="record.aId != null" >
+        a_id = #{record.aId,jdbcType=INTEGER},
+      </if>
+      <if test="record.aRoomid != null" >
+        a_roomid = #{record.aRoomid,jdbcType=INTEGER},
+      </if>
+      <if test="record.aBooktime != null" >
+        a_booktime = #{record.aBooktime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.aBookdays != null" >
+        a_bookdays = #{record.aBookdays,jdbcType=INTEGER},
+      </if>
+      <if test="record.aEndtime != null" >
+        a_endtime = #{record.aEndtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.aCustomerid != null" >
+        a_customerid = #{record.aCustomerid,jdbcType=INTEGER},
+      </if>
+      <if test="record.aCustomername != null" >
+        a_customername = #{record.aCustomername,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aType != null" >
+        a_type = #{record.aType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aActualvalue != null" >
+        a_actualvalue = #{record.aActualvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aShouquvalue != null" >
+        a_shouquvalue = #{record.aShouquvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aDiscoutvalue != null" >
+        a_discoutvalue = #{record.aDiscoutvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aValuestate != null" >
+        a_valuestate = #{record.aValuestate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aState != null" >
+        a_state = #{record.aState,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aRetirement != null" >
+        a_retirement = #{record.aRetirement,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update tb_bookroom
+    set a_id = #{record.aId,jdbcType=INTEGER},
+      a_roomid = #{record.aRoomid,jdbcType=INTEGER},
+      a_booktime = #{record.aBooktime,jdbcType=TIMESTAMP},
+      a_bookdays = #{record.aBookdays,jdbcType=INTEGER},
+      a_endtime = #{record.aEndtime,jdbcType=TIMESTAMP},
+      a_customerid = #{record.aCustomerid,jdbcType=INTEGER},
+      a_customername = #{record.aCustomername,jdbcType=VARCHAR},
+      a_type = #{record.aType,jdbcType=VARCHAR},
+      a_actualvalue = #{record.aActualvalue,jdbcType=VARCHAR},
+      a_shouquvalue = #{record.aShouquvalue,jdbcType=VARCHAR},
+      a_discoutvalue = #{record.aDiscoutvalue,jdbcType=VARCHAR},
+      a_valuestate = #{record.aValuestate,jdbcType=VARCHAR},
+      a_state = #{record.aState,jdbcType=VARCHAR},
+      a_retirement = #{record.aRetirement,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hms.pojo.TbBookroom" >
+    update tb_bookroom
+    <set >
+      <if test="aRoomid != null" >
+        a_roomid = #{aRoomid,jdbcType=INTEGER},
+      </if>
+      <if test="aBooktime != null" >
+        a_booktime = #{aBooktime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="aBookdays != null" >
+        a_bookdays = #{aBookdays,jdbcType=INTEGER},
+      </if>
+      <if test="aEndtime != null" >
+        a_endtime = #{aEndtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="aCustomerid != null" >
+        a_customerid = #{aCustomerid,jdbcType=INTEGER},
+      </if>
+      <if test="aCustomername != null" >
+        a_customername = #{aCustomername,jdbcType=VARCHAR},
+      </if>
+      <if test="aType != null" >
+        a_type = #{aType,jdbcType=VARCHAR},
+      </if>
+      <if test="aActualvalue != null" >
+        a_actualvalue = #{aActualvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="aShouquvalue != null" >
+        a_shouquvalue = #{aShouquvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="aDiscoutvalue != null" >
+        a_discoutvalue = #{aDiscoutvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="aValuestate != null" >
+        a_valuestate = #{aValuestate,jdbcType=VARCHAR},
+      </if>
+      <if test="aState != null" >
+        a_state = #{aState,jdbcType=VARCHAR},
+      </if>
+      <if test="aRetirement != null" >
+        a_retirement = #{aRetirement,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where a_id = #{aId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hms.pojo.TbBookroom" >
+    update tb_bookroom
+    set a_roomid = #{aRoomid,jdbcType=INTEGER},
+      a_booktime = #{aBooktime,jdbcType=TIMESTAMP},
+      a_bookdays = #{aBookdays,jdbcType=INTEGER},
+      a_endtime = #{aEndtime,jdbcType=TIMESTAMP},
+      a_customerid = #{aCustomerid,jdbcType=INTEGER},
+      a_customername = #{aCustomername,jdbcType=VARCHAR},
+      a_type = #{aType,jdbcType=VARCHAR},
+      a_actualvalue = #{aActualvalue,jdbcType=VARCHAR},
+      a_shouquvalue = #{aShouquvalue,jdbcType=VARCHAR},
+      a_discoutvalue = #{aDiscoutvalue,jdbcType=VARCHAR},
+      a_valuestate = #{aValuestate,jdbcType=VARCHAR},
+      a_state = #{aState,jdbcType=VARCHAR},
+      a_retirement = #{aRetirement,jdbcType=VARCHAR}
+    where a_id = #{aId,jdbcType=INTEGER}
+  </update>
+  
+  
+    <update id="updateByRtId" parameterType="java.lang.Integer">
+  
+  UPDATE tb_roomtype SET tb_roomtype.rt_state=REPLACE(tb_roomtype.rt_state,'入住','空房') WHERE rt_id=#{rtId,jdbcType=VARCHAR}
+  
+  </update>
+  
+  <update id="updateBycId" parameterType="java.lang.Integer">
+  
+   UPDATE tb_customer SET tb_customer.c_state=REPLACE(tb_customer.c_state,'在店','离店') WHERE c_id=#{cId,jdbcType=VARCHAR}
+   
+  </update>
+  <!--住宿信息  -->
+  <update id="updateStateByRtId" parameterType="java.lang.Integer">
+  
+  UPDATE tb_roomtype SET tb_roomtype.rt_state=REPLACE(tb_roomtype.rt_state,'空房','入住') WHERE rt_id=#{rtId,jdbcType=VARCHAR}
+  
+  </update>
+  
+  <update id="updateRetirementById" parameterType="java.lang.Integer">
+  UPDATE tb_bookroom SET tb_bookroom.a_retirement=REPLACE(tb_bookroom.a_retirement,'未退宿','已退宿') WHERE a_id=#{aId,jdbcType=VARCHAR}
+  </update>
+  <!--  
+  <select id="findAllBystate" resultMap="BaseResultMap" resultType="com.hms.pojo.TbRoomtype" >
+  SELECT * FROM tb_roomtype WHERE rt_state="空房"
+  </select>-->
+  
+  
+  
+  
+</mapper>

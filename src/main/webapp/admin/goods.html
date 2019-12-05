@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>顾客管理</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+	<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+    
+    <script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
+    
+<!--     <link rel="stylesheet" href="../plugins/select2/select2.css" />
+    <link rel="stylesheet" href="../plugins/select2/select2-bootstrap.css" />
+    <script src="../plugins/select2/select2.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../js/angular-select2.js">  </script> -->
+    
+    
+    
+    
+    <!-- 分页组件开始 -->
+		<script src="../plugins/angularjs/pagination.js"></script>
+		<link rel="stylesheet" href="../plugins/angularjs/pagination.css">
+	<!-- 分页组件结束 -->
+	
+	
+	
+	
+    
+ 
+ 	<script type="text/javascript">
+ 		var app=angular.module('hms',['pagination']);
+ 		app.controller('customerController',function($scope,$http){
+ 			
+ 			//查询所有顾客信息
+ 			$scope.findAll=function(){
+ 				$http.get('../customer/findAll.do').success(
+ 					function(response){
+ 							$scope.list=response;
+ 					}
+ 				);
+ 			}
+ 			//新增
+			$scope.save=function(){
+				var methodName='add';//方法名 
+				if($scope.entity.cId!=null){
+					methodName='update';
+				}				
+				$http.post('../customer/'+methodName +'.do',$scope.entity).success(
+					function(response){
+						if(response.success){
+							alert(response.message);
+							$scope.reloadList();//刷新
+						}else{
+							alert(response.message);
+						}				
+					}		
+				);
+			}
+ 			
+ 		
+ 			
+/*  			//增加客户信息
+ 			$scope.add=function(){
+ 				$http.post('../customer/add.do',$scope.entity).success(
+ 						function(response){
+ 							if(response.success){
+ 								$scope.reloadList();
+ 							}else{
+ 								alert(response.message);
+ 							}
+ 						}
+ 				);
+ 			} */
+ 			
+ 		
+ 			
+ 			$scope.findOne=function(id){
+ 				$http.get('../customer/findOne.do?id='+id).success(
+ 						function(response){
+ 							$scope.entity=response;
+ 						}
+ 				);
+ 			}
+ 			
+ 		
+ 			//刷新列表
+ 			$scope.reloadList=function(){
+ 				 $scope.search($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
+ 			}
+ 			$scope.paginationConf = {
+ 					 currentPage: 1,
+ 					 totalItems: 10,
+ 					 itemsPerPage: 10,
+ 					 perPageOptions: [10, 20, 30, 40, 50],
+ 					 onChange: function(){
+ 					     	$scope.reloadList();//重新加载
+ 					 }
+ 			}; 
+			$scope.findPage=function(page,size){
+				$http.get('../customer/findPage.do?page='+page+'&size='+size).success(
+						function(response){
+							$scope.list=response.rows;//显示当前页数据
+							$scope.paginationConf.totalItems=response.total//更新总记录数
+						}
+						
+				)
+				
+			};
+			
+			$scope.selectIds=[];//用户勾选的id
+			$scope.updateSelection=function($event,id){
+				if($event.target.checked){
+					$scope.selectIds.push(id);
+				}else{
+					var index=$scope.selectIds.indexOf(id);//查找元素的位置
+					$scope.selectIds.splice(index,1);//删除指定的页数，然后删除一条记录
+				}
+			};
+			//删除
+			$scope.dele=function(){
+ 				$http.get('../customer/delete.do?ids='+$scope.selectIds).success(
+ 						function(response){
+ 							if(response.success){
+ 								/* alert(response.message); */
+ 								$scope.reloadList();//刷新
+ 							}else{
+ 								alert(response.message);
+ 							}
+ 						}
+ 						
+ 				);
+ 			};
+			$scope.searchEntity={};
+			//地址上有参数了需要在function里加入参数定义且传参
+			$scope.search=function(page,size){
+				$http.post('../customer/search.do?page='+page+'&size='+size,$scope.searchEntity).success(
+						function(response){
+							$scope.list=response.rows;//显示当前页数据
+							$scope.paginationConf.totalItems=response.total//更新总记录数
+						}
+						
+				)
+			};
+			
+ 			
+ 			
+ 			
+ 		});
+ 		
+ 	
+ 	
+ 	</script>
+</head>
+
+<body class="hold-transition skin-red sidebar-mini" ng-app="hms" ng-controller="customerController">
+  <!-- .box-body -->
+                
+                    <div class="box-header with-border">
+                        <h3 class="box-title">顾客管理</h3>
+                    </div>
+
+                    <div class="box-body">
+
+                        <!-- 数据表格 -->
+                        <div class="table-box">
+
+                            <!--工具栏-->
+                            <div class="pull-left">
+                                <div class="form-group form-inline">
+                                    <div class="btn-group">
+                                       <button type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal" ng-click="entity={}"><i class="fa fa-file-o" ></i> 新建</button>
+                                        <button type="button" class="btn btn-default" title="删除" ng-click="dele()"><i class="fa fa-trash-o"></i> 删除</button>
+                                        <!-- <button type="button" class="btn btn-default" title="提交审核" ><i class="fa fa-check"></i> 提交审核</button>
+                                        <button type="button" class="btn btn-default" title="屏蔽" onclick='confirm("你确认要屏蔽吗？")'><i class="fa fa-ban"></i> 屏蔽</button> -->
+                                        <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="box-tools pull-right">
+                                <div class="has-feedback">
+                            
+<!--                                    状态：<select>
+                                         	<option value="">全部</option>      
+                                         	<option value="0">未申请</option>    
+                                         	<option value="1">申请中</option>    
+                                         	<option value="2">审核通过</option>    
+                                         	<option value="3">已驳回</option>                                     
+                                        </select>  -->
+							             顾客姓名：<input ng-model="searchEntity.cName">								
+							              顾客状态：<input ng-model="searchEntity.cState"> 
+				<!-- 			  顾客状态：<select select2 ng-model="searchEntity.cState">
+							 		 
+				                    <option value="1">在店</option>
+				                    <option value="2">离店</option>
+				                </select> -->
+							             顾客类型：<input ng-model="searchEntity.cType">									
+									<button class="btn btn-default" ng-click="reloadList()" >查询</button>                                    
+                                </div>
+                            </div>
+                            <!--工具栏/-->
+
+			                  <!--数据列表-->
+			                  <table id="dataList" class="table table-bordered table-striped table-hover dataTable">
+			                      <thead>
+			                          <tr>
+			                              <th class="" style="padding-right:0px">
+			                                  <input id="selall" type="checkbox" class="icheckbox_square-blue">
+			                              </th> 
+										  <th class="sorting_asc">顾客ID</th>
+									      <th class="sorting">姓名</th>
+									      <th class="sorting">性别</th>
+									      <th class="sorting">证件类型</th>
+									      <th class="sorting">证件编号</th>
+									      <th class="sorting">证件地址</th>
+									      <th class="sorting">联系方式</th>									     						
+					                      <th class="text-center">顾客状态</th>
+					           <!--            <th class="sorting">总计金额</th>	 -->
+					                      <th class="sorting">顾客类型</th>	
+					                     <!--  <th class="sorting">折扣优惠</th>	 -->
+			                          </tr>
+			                      </thead>
+			                      <tbody>
+			                          <tr ng-repeat="entity in list">
+			                              <td><input  type="checkbox" ng-click="updateSelection($event,entity.cId)"></td>			                              
+				                          <td>{{entity.cId}}</td>
+									      <td>{{entity.cName}}</td>
+									      <td>{{entity.cSex}}</td>
+									      <td>{{entity.cCardstyle}}</td>
+									      <td>{{entity.cCardno}}</td>
+									      <td>{{entity.cAddress}}</td>
+									      <td>{{entity.cPhoneno}}</td>
+									      <td>{{entity.cState}}</td>
+									   <!--    <td>{{entity.cTotalmoney}}</td> -->
+									      <td>{{entity.cType}}</td>
+									    <!--   <td>{{entity.cDiscount}}</td> -->
+		               <!--                    <td>
+		                                  	<span>
+		                                  		未申请
+		                                  	</span>
+		                                  	<span >
+		                                  		申请中
+		                                  	</span>
+		                                  	<span>
+		                                  		审核通过
+		                                  	</span>
+		                                  	<span>
+		                                  		已驳回
+		                                  	</span>
+		                                  </td>	 -->	                                  
+		                                  <td class="text-center">
+		                                	  <button type="button" class="btn bg-olive btn-xs" title="修改" data-toggle="modal" data-target="#editModal" ng-click="findOne(entity.cId)"><i class="fa fa-file-o" ></i> 修改</button>                                          
+		                                 	  <!-- <button type="button" class="btn bg-olive btn-xs">删除</button>     -->               
+		                                  </td>
+			                          </tr>
+			                      </tbody>
+			                  </table>
+			                  <!--数据列表/-->                        
+							  <tm-pagination conf="paginationConf"></tm-pagination>
+				<!-- 			 {{selectIds}}//测试数据 -->
+				
+		                        
+                               
+             
+               
+                
+                	
+				
+				
+                        </div>
+                        <!-- 数据表格 /-->
+                        
+                        
+                     </div>
+                    <!-- /.box-body -->
+                    
+                    
+<!-- 编辑窗口 -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" >
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">顾客信息编辑</h3>
+		</div>
+		<div class="modal-body">		
+			<table class="table table-bordered table-striped"  width="800px">
+		      	<tr>
+		      		<td>姓名</td>
+		      		<td><input  class="form-control" placeholder="姓名" ng-model="entity.cName">  </td>
+		      	</tr>		      	
+		      	<tr>
+		      		<td>性别</td>
+		      		<td><input  class="form-control"  placeholder="性别" ng-model="entity.cSex">  </td>
+		      	</tr>
+		      	<tr>
+		      		<td>证件类型</td>
+		      		<td><input  class="form-control" placeholder="证件类型" ng-model="entity.cCardstyle">  </td>
+		      	</tr>
+		      	<tr>
+		      		<td>证件编号</td>
+		      		<td><input  class="form-control" placeholder="证件编号" ng-model="entity.cCardno">  </td>
+		      	</tr>
+		      	<tr>
+		      		<td>证件地址</td>
+		      		<td><input  class="form-control" placeholder="证件地址" ng-model="entity.cAddress">  </td>
+		      	</tr>
+		      	<tr>
+		      		<td>联系方式</td>
+		      		<td><input  class="form-control" placeholder="联系方式" ng-model="entity.cPhoneno">  </td>
+		      	</tr>
+		      	<tr>
+		      		<td>顾客状态</td>
+		      		<td><input  class="form-control" placeholder="顾客状态" ng-model="entity.cState" value="在店">  </td>
+		      	</tr>
+	<!-- 	      	<tr>
+		      		<td>总计金额</td>
+		      		<td><input  class="form-control" placeholder="总计金额" ng-model="entity.cTotalmoney">  </td>
+		      	</tr> -->
+		      	<tr>
+		      		<td>顾客类型</td>
+		      		<td><input  class="form-control" placeholder="顾客类型" ng-model="entity.cType">  </td>
+		      	</tr>
+	<!-- 	      	<tr>
+		      		<td>折扣优惠</td>
+		      		<td><input  class="form-control" placeholder="折扣优惠" ng-model="entity.cDiscount">  </td>
+		      	</tr> -->	   	      			      	
+			 </table>				
+		</div>
+		<div class="modal-footer">						
+			<button class="btn btn-success" data-dismiss="modal" aria-hidden="true" ng-click="save()">保存</button>
+			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+		</div>
+	  </div>
+	</div>
+</div>
+		
+</body>
+
+</html>

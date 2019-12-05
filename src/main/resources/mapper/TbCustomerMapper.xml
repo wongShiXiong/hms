@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hms.dao.TbCustomerMapper" >
+  <resultMap id="BaseResultMap" type="com.hms.pojo.TbCustomer" >
+    <id column="c_id" property="cId" jdbcType="INTEGER" />
+    <result column="c_name" property="cName" jdbcType="VARCHAR" />
+    <result column="c_sex" property="cSex" jdbcType="VARCHAR" />
+    <result column="c_cardstyle" property="cCardstyle" jdbcType="VARCHAR" />
+    <result column="c_cardno" property="cCardno" jdbcType="VARCHAR" />
+    <result column="c_address" property="cAddress" jdbcType="VARCHAR" />
+    <result column="c_phoneno" property="cPhoneno" jdbcType="VARCHAR" />
+    <result column="c_state" property="cState" jdbcType="VARCHAR" />
+    <result column="c_totalmoney" property="cTotalmoney" jdbcType="VARCHAR" />
+    <result column="c_type" property="cType" jdbcType="VARCHAR" />
+    <result column="c_discount" property="cDiscount" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    c_id, c_name, c_sex, c_cardstyle, c_cardno, c_address, c_phoneno, c_state, c_totalmoney, 
+    c_type, c_discount
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hms.pojo.TbCustomerExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_customer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_customer
+    where c_id = #{cId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_customer
+    where c_id = #{cId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hms.pojo.TbCustomerExample" >
+    delete from tb_customer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hms.pojo.TbCustomer" >
+    insert into tb_customer (c_id, c_name, c_sex, 
+      c_cardstyle, c_cardno, c_address, 
+      c_phoneno, c_state, c_totalmoney, 
+      c_type, c_discount)
+    values (#{cId,jdbcType=INTEGER}, #{cName,jdbcType=VARCHAR}, #{cSex,jdbcType=VARCHAR}, 
+      #{cCardstyle,jdbcType=VARCHAR}, #{cCardno,jdbcType=VARCHAR}, #{cAddress,jdbcType=VARCHAR}, 
+      #{cPhoneno,jdbcType=VARCHAR}, #{cState,jdbcType=VARCHAR}, #{cTotalmoney,jdbcType=VARCHAR}, 
+      #{cType,jdbcType=VARCHAR}, #{cDiscount,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hms.pojo.TbCustomer" >
+    insert into tb_customer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cId != null" >
+        c_id,
+      </if>
+      <if test="cName != null" >
+        c_name,
+      </if>
+      <if test="cSex != null" >
+        c_sex,
+      </if>
+      <if test="cCardstyle != null" >
+        c_cardstyle,
+      </if>
+      <if test="cCardno != null" >
+        c_cardno,
+      </if>
+      <if test="cAddress != null" >
+        c_address,
+      </if>
+      <if test="cPhoneno != null" >
+        c_phoneno,
+      </if>
+      <if test="cState != null" >
+        c_state,
+      </if>
+      <if test="cTotalmoney != null" >
+        c_totalmoney,
+      </if>
+      <if test="cType != null" >
+        c_type,
+      </if>
+      <if test="cDiscount != null" >
+        c_discount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cId != null" >
+        #{cId,jdbcType=INTEGER},
+      </if>
+      <if test="cName != null" >
+        #{cName,jdbcType=VARCHAR},
+      </if>
+      <if test="cSex != null" >
+        #{cSex,jdbcType=VARCHAR},
+      </if>
+      <if test="cCardstyle != null" >
+        #{cCardstyle,jdbcType=VARCHAR},
+      </if>
+      <if test="cCardno != null" >
+        #{cCardno,jdbcType=VARCHAR},
+      </if>
+      <if test="cAddress != null" >
+        #{cAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="cPhoneno != null" >
+        #{cPhoneno,jdbcType=VARCHAR},
+      </if>
+      <if test="cState != null" >
+        #{cState,jdbcType=VARCHAR},
+      </if>
+      <if test="cTotalmoney != null" >
+        #{cTotalmoney,jdbcType=VARCHAR},
+      </if>
+      <if test="cType != null" >
+        #{cType,jdbcType=VARCHAR},
+      </if>
+      <if test="cDiscount != null" >
+        #{cDiscount,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hms.pojo.TbCustomerExample" resultType="java.lang.Integer" >
+    select count(*) from tb_customer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update tb_customer
+    <set >
+      <if test="record.cId != null" >
+        c_id = #{record.cId,jdbcType=INTEGER},
+      </if>
+      <if test="record.cName != null" >
+        c_name = #{record.cName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cSex != null" >
+        c_sex = #{record.cSex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cCardstyle != null" >
+        c_cardstyle = #{record.cCardstyle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cCardno != null" >
+        c_cardno = #{record.cCardno,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cAddress != null" >
+        c_address = #{record.cAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cPhoneno != null" >
+        c_phoneno = #{record.cPhoneno,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cState != null" >
+        c_state = #{record.cState,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cTotalmoney != null" >
+        c_totalmoney = #{record.cTotalmoney,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cType != null" >
+        c_type = #{record.cType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cDiscount != null" >
+        c_discount = #{record.cDiscount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update tb_customer
+    set c_id = #{record.cId,jdbcType=INTEGER},
+      c_name = #{record.cName,jdbcType=VARCHAR},
+      c_sex = #{record.cSex,jdbcType=VARCHAR},
+      c_cardstyle = #{record.cCardstyle,jdbcType=VARCHAR},
+      c_cardno = #{record.cCardno,jdbcType=VARCHAR},
+      c_address = #{record.cAddress,jdbcType=VARCHAR},
+      c_phoneno = #{record.cPhoneno,jdbcType=VARCHAR},
+      c_state = #{record.cState,jdbcType=VARCHAR},
+      c_totalmoney = #{record.cTotalmoney,jdbcType=VARCHAR},
+      c_type = #{record.cType,jdbcType=VARCHAR},
+      c_discount = #{record.cDiscount,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hms.pojo.TbCustomer" >
+    update tb_customer
+    <set >
+      <if test="cName != null" >
+        c_name = #{cName,jdbcType=VARCHAR},
+      </if>
+      <if test="cSex != null" >
+        c_sex = #{cSex,jdbcType=VARCHAR},
+      </if>
+      <if test="cCardstyle != null" >
+        c_cardstyle = #{cCardstyle,jdbcType=VARCHAR},
+      </if>
+      <if test="cCardno != null" >
+        c_cardno = #{cCardno,jdbcType=VARCHAR},
+      </if>
+      <if test="cAddress != null" >
+        c_address = #{cAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="cPhoneno != null" >
+        c_phoneno = #{cPhoneno,jdbcType=VARCHAR},
+      </if>
+      <if test="cState != null" >
+        c_state = #{cState,jdbcType=VARCHAR},
+      </if>
+      <if test="cTotalmoney != null" >
+        c_totalmoney = #{cTotalmoney,jdbcType=VARCHAR},
+      </if>
+      <if test="cType != null" >
+        c_type = #{cType,jdbcType=VARCHAR},
+      </if>
+      <if test="cDiscount != null" >
+        c_discount = #{cDiscount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where c_id = #{cId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hms.pojo.TbCustomer" >
+    update tb_customer
+    set c_name = #{cName,jdbcType=VARCHAR},
+      c_sex = #{cSex,jdbcType=VARCHAR},
+      c_cardstyle = #{cCardstyle,jdbcType=VARCHAR},
+      c_cardno = #{cCardno,jdbcType=VARCHAR},
+      c_address = #{cAddress,jdbcType=VARCHAR},
+      c_phoneno = #{cPhoneno,jdbcType=VARCHAR},
+      c_state = #{cState,jdbcType=VARCHAR},
+      c_totalmoney = #{cTotalmoney,jdbcType=VARCHAR},
+      c_type = #{cType,jdbcType=VARCHAR},
+      c_discount = #{cDiscount,jdbcType=VARCHAR}
+    where c_id = #{cId,jdbcType=INTEGER}
+  </update>
+</mapper>
