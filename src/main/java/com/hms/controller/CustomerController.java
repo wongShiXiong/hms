@@ -1,16 +1,17 @@
 package com.hms.controller;
 
-import com.hms.entity.PageResult;
-import com.hms.entity.Result;
-import com.hms.pojo.TbCustomer;
-import com.hms.service.CustomerService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
+import com.hms.entity.PageResult;
+import com.hms.entity.Result;
+import com.hms.pojo.TbCustomer;
+import com.hms.service.CustomerService;
 
 @ResponseBody
 @Controller
